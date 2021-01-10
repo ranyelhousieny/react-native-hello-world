@@ -1,11 +1,51 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
-export default function App() {
+export default function App () {
+  const [ value, setValue ] = React.useState( "" );
+  const [ state, addTask ] = React.useState({ tasks: []});
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>Rany ElHousieny To DO List</Text>
+      <TextInput
+        style={ { borderColor: 'black', borderWidth: 2 } }
+        onChangeText={ text => setValue( text ) }
+        placeholder="Add a task"
+        value={value} />
+      <Button
+        title="Add Task"
+        onPress={ () => {
+          addTask( { ...state, tasks: [ ...state.tasks, value ] } );
+          setValue("")
+          console.log(state)
+        } }
+      />
+      <hr/>
+      <view>
+        { state.tasks.map( ( task, index ) => {
+
+          return (
+            <span>
+            <li key={ index }>{ task }
+              <Button
+                  title={ `Delete ` + task }
+                  onPress={ () => {
+                    console.log( "state", state );
+                    const array = [ ...state.tasks ];
+                    array.splice( index, 1 );
+                    console.log( "array", array );
+                    addTask( { tasks: array } )
+                    console.log( "state", state );
+                    
+                  } }
+              />
+            </li>
+              </span>
+             );
+        }) }
+      </view>
       <StatusBar style="auto" />
     </View>
   );
